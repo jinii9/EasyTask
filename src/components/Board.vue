@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 img {
     object-fit: contain;
 }
@@ -16,9 +16,6 @@ img {
     justify-content: center;
     align-items: center;
 }
-/* .work-item {
-
-} */
 .item-wrap {
     /* margin: 0 auto; */
     width: 96rem;
@@ -34,6 +31,9 @@ img {
 }
 
 .right-wrap {
+    /* --state-color: #000000; */
+    /* background-color: var(--state-color); */
+
     margin-left: 2.4rem;
     display: flex;
     flex-direction: column;
@@ -44,20 +44,18 @@ img {
 .info-wrap {
     display: flex;
 }
-.state {
-    /* --state-color: #000000; */
+/* .state {
     width: 6.3rem;
     height: 2.8rem;
     text-align: center;
     line-height: 2.8rem;
-    /* background-color: var(--state-color); */
     background-color: black;
 
     color: white;
     border-radius: 1.6rem;
     font-weight: 600;
     font-size: 1.2rem;
-}
+} */
 .title {
     font-size: 1.6rem;
     font-weight: 600;
@@ -100,14 +98,14 @@ img {
 
 <template>
     <div class="page-wrap">
+        <!-- <StyledHeader primary>안녕하신감</StyledHeader> -->
+
         <div class="item-wrap" v-for="w in works" :key="w.id">
-            <!-- <div class="item-wrap"> -->
                 <div class="right-wrap">
-                    <!-- <div class="info-wrap"> -->
                         <div class="info-wrap">
-                            <div class="state" v-if="w.startTime===null">작업예정</div>
-                            <div class="state" v-else-if="w.startTime!==null && w.endTime===null">작업중</div>
-                            <div class="state" v-else-if="w.endTime!==null">작업완료</div>
+                            <State v-if="w.startTime===null" before>작업예정</State>
+                            <State class="state" v-else-if="w.startTime!==null && w.endTime===null" ing>작업중</State>
+                            <State class="state" v-else-if="w.endTime!==null" after>작업완료</State>
 
                             <div class="title">{{ w.name }}</div>
                         </div>
@@ -115,7 +113,6 @@ img {
                             <img src="../assets/images/bell.png">
                             <div class="date-text">{{ w.requestedTime }}</div>
                         </div>
-                    <!-- </div> -->
                 </div>
 
                 <div class="left-wrap">
@@ -123,25 +120,27 @@ img {
                         업무시작
                     </div>
                 </div>
-            <!-- </div> -->
         </div>
     </div>
 </template>
 
 <script>
 import {mapState, mapActions} from 'vuex'
+import {State} from "../styled-components/Board"
 
 export default {
+    components: {
+        State
+    },
     data() {
         return {
-            stateName: "",
         }
     },
     computed: {
         ...mapState({
             works: 'works'
         }),
-        stateStyle () {
+        customStyle () {
             
         }
     },
@@ -154,33 +153,14 @@ export default {
         ]),
         fetchData() {
             this.FETCH_WORKS()
+        },
+        handleBefore() {
+            
         }
     }
 }
 
 </script>
 
-<!-- <style>
-.page-wrap {
-    /* width: 100vh; */
-    /* height: 100vh; */
-    /* position: absolute; */
-    /* margin: 0 auto; */
-    border: 1px solid blue;
-    margin: 19.4rem 0 19.4rem 0;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.work-item{
 
-}
-.item-wrap{
-    /* margin: 0 auto; */
-    width: 96rem;
-    height: 10.8rem;
-    border: 1px solid red;
-}
-</style> -->
