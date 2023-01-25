@@ -18,4 +18,14 @@ export const work = {
     fetch() {
         return request('get', '/works')
     },
+    put(id, name, description, startTime, endTime, requestedTime) {
+        return request('put', `/works/${id}`, {
+            id: id, 
+            name: name, 
+            description: description, 
+            startTime: startTime,
+            endTime: endTime,
+            requestedTime: requestedTime
+        });
+    }
 }
