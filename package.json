@@ -1,5 +1,5 @@
 {
-  "name": "easytask-vue",
+  "name": "easytask",
   "description": "A Vue.js project",
   "version": "1.0.0",
   "author": "jinii9 <69418829+jinii9@users.noreply.github.com>",
@@ -10,15 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "axios": "^1.2.3",
-    "moment": "^2.29.4",
-    "styled-components": "^5.3.6",
-    "vue": "^2.5.11",
-    "vue-moment": "^4.1.0",
-    "vue-moment-lib": "^1.2.2",
-    "vue-router": "^3.6.5",
-    "vue-styled-components": "^1.6.0",
-    "vuex": "^2.0.0"
+    "vue": "^2.5.11"
   },
   "browserslist": [
     "> 1%",
@@ -26,7 +18,6 @@
     "not ie <= 8"
   ],
   "devDependencies": {
-    "@types/styled-components": "^5.1.26",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
