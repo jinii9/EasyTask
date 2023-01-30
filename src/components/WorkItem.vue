@@ -83,6 +83,28 @@ img {
 
     margin-bottom: 0.8rem;
 }
+
+
+.work-btn {
+    width: 8rem;
+    height: 2.9rem;
+    background-color: #2260FF;
+    color: white;
+    border-radius: 0.4rem;
+    text-align: center;
+    line-height: 2.8rem;
+    font-weight: 600;
+    font-size: 1.4rem;
+    cursor: pointer;
+
+    margin-left: 0.8rem;
+
+}
+.work-btn-disabled {
+    background-color: #E6E9F8;
+    color: #CBCFE8;
+    cursor: default;
+}
 </style>
 
 <template>
@@ -109,7 +131,13 @@ img {
             <div v-if="itemCheck.stateCheck==='before' && beforeTime!=='over'">
                 <div class="remain">업무시작까지 {{ beforeTime }}분 남았습니다</div>
             </div>
+
+            <button class="work-btn" :class="{'work-btn-disabled': disabledCheck}" v-if="itemCheck.stateCheck==='before'" :disabled="disabledCheck">업무시작</button>
+            <button class="work-btn" v-if="itemCheck.stateCheck==='ing'">업무중</button>
+            <button class="work-btn" v-if="itemCheck.stateCheck==='after'">업무종료</button>
+
         </div>
+
     </div>
 </template>
 
@@ -129,7 +157,7 @@ export default {
         return {
             current: this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
             beforeTime: "", // 업무시간까지 남은 시간
-
+            disabledCheck: true,
         }
     },
     mounted() {
@@ -151,7 +179,10 @@ export default {
                 // // 작업요청일자가 후에 있다면, 얼마나 차이나는지
                 if(check) {
 
-                    // let gap = this.$moment(requested).diff(this.current, 'minutes')
+                    let gap = this.$moment(this.item.startTime).diff(this.current, 'minutes')
+                    if(gap <= 15){
+                        this.disabledCheck = false
+                    }
 
                     let diff = this.$moment(requested).diff(this.current, 'seconds')
 
