@@ -26,6 +26,9 @@ img {
 
 <template>
     <div class="page-wrap" :class="{'work-item-null': works!==null}">
+        <!-- <div class="work-item" v-for="w in works" :key="w.id" >
+            <WorkItem :item="w" :itemCheck="checks[w.id]"/>
+        </div> -->
         <div class="work-item" v-for="w in works" :key="w.id" >
             <WorkItem :item="w" :itemCheck="checks[w.id]"/>
         </div>

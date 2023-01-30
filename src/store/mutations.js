@@ -5,6 +5,7 @@ const mutations = {
     SET_WORKS (state, works) {
         
         state.works = works
+        console.log(state.works)
         // for(let i=0; i<works.length; i++){
         //     state.works[i].stateCheck = "before"
         //     console.log(state.works[i])
@@ -15,7 +16,7 @@ const mutations = {
             let value = {
                 id: works[i].id,
                 stateCheck: "before",
-                beforeTime: 0,
+                // beforeTime: 0,
             }
             state.checks.push(value)
         }
@@ -25,11 +26,11 @@ const mutations = {
         // state.checks.id = id
         // state.checks.check = check
         for(let i=0; i<state.works.length; i++){
-            console.log(state.checks[i].id)
-            console.log(id)
+            // console.log(state.checks[i].id)
+            // console.log(id)
             if(state.checks[i].id === id) {
                 state.checks[i].stateCheck = check
-                console.log(state.checks[i].stateCheck)
+                // console.log(state.checks[i].stateCheck)
             }
         }
     }

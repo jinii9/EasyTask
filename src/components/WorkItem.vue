@@ -63,6 +63,9 @@ img {
 
     margin-left: 0.8rem;  
 }
+.dateTextOver {
+    color: #F10000
+}
 .right-wrap {
     margin-right: 2.4rem;
     display: flex;
@@ -97,14 +100,14 @@ img {
                 <div class="date-wrap">
                     <img src="../assets/images/bell.png">
                     <!-- 조건문 -->
-                    <div class="dateText">{{ item.requestedTime }}</div>
+                    <div class="dateText" :class="{'dateTextOver': beforeTime==='over'}">{{ item.requestedTime }}</div>
                     <button @click="workCheck">test</button>
                 </div>
         </div>
         
         <div class="right-wrap">
-            <div v-if="itemCheck.stateCheck==='before'">
-                <div class="remain">업무시작까지 {{  }}분 남았습니다</div>
+            <div v-if="itemCheck.stateCheck==='before' && beforeTime!=='over'">
+                <div class="remain">업무시작까지 {{ beforeTime }}분 남았습니다</div>
             </div>
         </div>
     </div>
@@ -124,12 +127,48 @@ export default {
     },
     data() {
         return {
-            itemChecks: {},
             current: this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            beforeTime: "", // 업무시간까지 남은 시간
+
         }
     },
     mounted() {
-        this.handleBeforeTime()        
+
+            let intervalBefore = setInterval(() => { // 업무시작까지 몇 분 남았는지
+                // console.log(this.itemCheck.id)
+                // console.log(stateCheck)
+                let stateCheck = this.itemCheck.stateCheck
+                let requested = this.item.requestedTime
+
+                if(stateCheck==='ing'){
+                    console.log(stateCheck)
+
+                    clearInterval(intervalBefore)
+                }
+
+                this.current = this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+                let check = this.$moment(requested).isAfter(this.current)// 작업요청일자가 현재시각보다 후에 있는경우 - true
+                // // 작업요청일자가 후에 있다면, 얼마나 차이나는지
+                if(check) {
+
+                    // let gap = this.$moment(requested).diff(this.current, 'minutes')
+
+                    let diff = this.$moment(requested).diff(this.current, 'seconds')
+
+                    let days = Math.floor(diff/(60*60*24))
+                    let hours = Math.floor((diff%(60*60*24))/(60*60))
+                    let mins = Math.floor((diff%(60*60)/60))
+                    let secs = Math.floor((diff%60))
+                    this.beforeTime = `${days}일 ${hours}시간 ${mins}분 ${secs}초`
+                } else { // 작업요청일자 < 현재 시각
+                    clearInterval(intervalBefore)
+                    this.beforeTime = "over"
+                }
+
+
+
+            }, 1000)
+        
     },
     computed: {
         ...mapState({
@@ -141,9 +180,12 @@ export default {
         ...mapMutations([
             'SET_CHECKS'
         ]),
-        handleBeforeTime() { // 업무시작까지 몇 분 남았는지 
-            
-        },
+        // handleBeforeTime() { // 업무시작까지 몇 분 남았는지 
+        //     var requested = this.item.requestedTime
+        //     console.log(this.current)
+        //     console.log(requested)
+        //     // var diffDate = '차이' + moment.duration.(comment.diff(requested).hours + '시간')
+        // },
         workCheck() {
             this.SET_CHECKS({id:this.item.id, check:"ing"})
             // console.log("버튼 id 체크")
