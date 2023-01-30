@@ -159,7 +159,7 @@ img {
         
         <div class="right-wrap">
             <div v-if="itemCheck.stateCheck==='before' && beforeTime!=='over'">
-                <div class="remain">업무시작까지 {{ beforeTime }}분 남았습니다</div>
+                <div class="remain">업무시작까지 {{ beforeTime }}분 남았습니다.</div>
             </div>
 
             <button class="work-btn" :class="{'work-btn-disabled': disabledCheck}" v-if="itemCheck.stateCheck==='before'" 
@@ -212,8 +212,6 @@ export default {
     mounted() {
             // 업무시작까지 몇 분 남았는지
             let intervalBefore = setInterval(() => { 
-                // console.log(this.itemCheck.id)
-                // console.log(stateCheck)
                 let stateCheck = this.itemCheck.stateCheck
                 let requested = this.item.requestedTime
 
@@ -240,7 +238,16 @@ export default {
                     let hours = Math.floor((diff%(60*60*24))/(60*60))
                     let mins = Math.floor((diff%(60*60)/60))
                     let secs = Math.floor((diff%60))
-                    this.beforeTime = `${days}일 ${hours}시간 ${mins}분 ${secs}초`
+
+                    if(days===0){
+                        this.beforeTime = `${hours}시간 ${mins}분 ${secs}초`
+                    } 
+                    else if(hours===0){
+                        this.beforeTime = `${mins}분 ${secs}초`
+                    }
+                    else {
+                        this.beforeTime = `${days}일 ${hours}시간 ${mins}분 ${secs}초`
+                    }
                 } else { // 작업요청일자 < 현재 시각
                     clearInterval(intervalBefore)
                     this.beforeTime = "over"
