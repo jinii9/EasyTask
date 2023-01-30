@@ -9,10 +9,10 @@ const actions = {
             commit('SET_WORKS', data)
         })
     },
-    // PUT_WORK (_, {id, name, description, startTime, endTime, requestedTime}) {
-    //     console.log("확인")
-    //     return api.work.put(id, name, description, startTime, endTime, requestedTime)
-    // },
+    PUT_WORK (_, {id, name, description, startTime, endTime, requestedTime}) {
+        console.log("확인")
+        return api.work.put(id, name, description, startTime, endTime, requestedTime)
+    },
 }
 
 export default actions

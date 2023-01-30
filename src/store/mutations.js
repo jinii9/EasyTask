@@ -36,7 +36,18 @@ const mutations = {
                 state.checks[i].useTime = timer
             }
         }
-        console.log(state.checks)
+        // console.log(state.checks)
+
+    },
+    SET_WORK_EDIT (state, work) {
+        console.log(work)
+        for(let i=0; i<state.works.length; i++){
+            if(state.works[i].id === work.id) {
+                state.works[i].startTime = work.startTime
+                state.works[i].endTime = work.endTime
+
+            }
+        }
 
     }
 }

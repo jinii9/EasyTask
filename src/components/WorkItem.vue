@@ -123,6 +123,18 @@ img {
     color: #CBCFE8;
     cursor: default;
 }
+
+.end-wrap {
+}
+.deadLine {
+    display: flex;
+}
+.deadLine-date {
+    margin-left: 0.4rem;
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 2.1rem;
+}
 </style>
 
 <template>
@@ -151,15 +163,27 @@ img {
             </div>
 
             <button class="work-btn" :class="{'work-btn-disabled': disabledCheck}" v-if="itemCheck.stateCheck==='before'" 
-                :disabled="disabledCheck" @click="workStart">업무시작</button>
+                :disabled="disabledCheck" @click="[workStart(), putWORK('start')]">업무시작</button>
             <div class="ing-wrap" v-if="itemCheck.stateCheck==='ing'">
                 <div class="useTime-wrap">
                     <img src="../assets/images/clock.png">
                     <div class="useTime">{{itemCheck.useTime}}</div>
                 </div>
-                <button class="work-btn" @click="workEnd">업무종료</button>
+                <button class="work-btn" @click="[workEnd(), putWORK('end')]">업무종료</button>
             </div>
 
+            <div v-if="itemCheck.stateCheck==='after'">
+                <div class="end-wrap">
+                    <div class="deadLine">
+                        <img src="../assets/images/check.png">
+                        <div class="deadLine-date">{{ $moment(item.startTime).format('YYYY년 M월 D일 h시 m분') }} ~ {{ $moment(item.endTime).format('YYYY년 M월 D일 h시 m분') }}</div>
+                    </div>
+                    <div class="useTime-wrap">
+                        <img src="../assets/images/clock.png">
+                        <div class="useTime">{{itemCheck.useTime}}</div>
+                    </div>
+                </div>                
+            </div>
         </div>
 
     </div>
@@ -205,6 +229,7 @@ export default {
                 if(check) {
 
                     let gap = this.$moment(this.item.startTime).diff(this.current, 'minutes')
+                    // console.log(`gap: ${gap}`)
                     if(gap <= 15){
                         this.disabledCheck = false
                     }
@@ -235,7 +260,11 @@ export default {
     methods: {
         ...mapMutations([
             'SET_CHECKS',
-            'SET_CHECKS_TIMER'
+            'SET_CHECKS_TIMER',
+            'SET_WORK_EDIT'
+        ]),
+        ...mapActions([
+            'PUT_WORK',
         ]),
         // handleBeforeTime() { // 업무시작까지 몇 분 남았는지 
         //     var requested = this.item.requestedTime
@@ -247,6 +276,34 @@ export default {
         // workCheck() {
         //     this.SET_CHECKS({id:this.item.id, check:"ing"})
         // }
+        // 업무시작 및 업무종료 버튼 클릭 시, db 값 변경
+        putWORK(check) {
+            var startTime = null
+            var endTime = null
+            if(check==="start"){
+                startTime = this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+                endTime = this.item.endTime
+                console.log(`startTime:${startTime}`)
+            }
+            else if(check==="end"){
+                startTime = this.item.startTime
+                endTime = this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
+                console.log(`endTime:${endTime}`)
+            }
+
+            this.SET_WORK_EDIT({id:this.item.id, startTime:startTime, endTime:endTime})
+            this.PUT_WORK({
+                id: this.item.id, 
+                name: this.item.name, 
+                description: this.item.description, 
+                startTime: startTime,
+                endTime: endTime,
+                requestedTime: this.item.requestedTime
+            })
+            .catch(err => {
+            this.error = err.data.error
+            })            
+        },
         workStart() {
             this.SET_CHECKS({id:this.item.id, check:"ing"})
             let useTime = 0;
