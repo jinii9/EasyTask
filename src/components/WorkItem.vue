@@ -83,8 +83,26 @@ img {
 
     margin-bottom: 0.8rem;
 }
+.ing-wrap {
+    display: flex;
 
+}
+.useTime-wrap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    /* margin-right: 0.8rem; */
+}
+.useTime {
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 2.1rem;
 
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin-left: 0.65rem;
+}
 .work-btn {
     width: 8rem;
     height: 2.9rem;
@@ -123,7 +141,7 @@ img {
                     <img src="../assets/images/bell.png">
                     <!-- 조건문 -->
                     <div class="dateText" :class="{'dateTextOver': beforeTime==='over'}">{{ item.requestedTime }}</div>
-                    <button @click="workCheck">test</button>
+                    <!-- <button @click="workCheck">test</button> -->
                 </div>
         </div>
         
@@ -132,9 +150,15 @@ img {
                 <div class="remain">업무시작까지 {{ beforeTime }}분 남았습니다</div>
             </div>
 
-            <button class="work-btn" :class="{'work-btn-disabled': disabledCheck}" v-if="itemCheck.stateCheck==='before'" :disabled="disabledCheck">업무시작</button>
-            <button class="work-btn" v-if="itemCheck.stateCheck==='ing'">업무중</button>
-            <button class="work-btn" v-if="itemCheck.stateCheck==='after'">업무종료</button>
+            <button class="work-btn" :class="{'work-btn-disabled': disabledCheck}" v-if="itemCheck.stateCheck==='before'" 
+                :disabled="disabledCheck" @click="workStart">업무시작</button>
+            <div class="ing-wrap" v-if="itemCheck.stateCheck==='ing'">
+                <div class="useTime-wrap">
+                    <img src="../assets/images/clock.png">
+                    <div class="useTime">{{itemCheck.useTime}}</div>
+                </div>
+                <button class="work-btn" @click="workEnd">업무종료</button>
+            </div>
 
         </div>
 
@@ -157,12 +181,13 @@ export default {
         return {
             current: this.$moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
             beforeTime: "", // 업무시간까지 남은 시간
-            disabledCheck: true,
+            disabledCheck: true, 
+            useTimeText: "", // 업무한 시간 카운트
         }
     },
     mounted() {
-
-            let intervalBefore = setInterval(() => { // 업무시작까지 몇 분 남았는지
+            // 업무시작까지 몇 분 남았는지
+            let intervalBefore = setInterval(() => { 
                 // console.log(this.itemCheck.id)
                 // console.log(stateCheck)
                 let stateCheck = this.itemCheck.stateCheck
@@ -209,7 +234,8 @@ export default {
     },
     methods: {
         ...mapMutations([
-            'SET_CHECKS'
+            'SET_CHECKS',
+            'SET_CHECKS_TIMER'
         ]),
         // handleBeforeTime() { // 업무시작까지 몇 분 남았는지 
         //     var requested = this.item.requestedTime
@@ -217,10 +243,54 @@ export default {
         //     console.log(requested)
         //     // var diffDate = '차이' + moment.duration.(comment.diff(requested).hours + '시간')
         // },
-        workCheck() {
+
+        // workCheck() {
+        //     this.SET_CHECKS({id:this.item.id, check:"ing"})
+        // }
+        workStart() {
             this.SET_CHECKS({id:this.item.id, check:"ing"})
-            // console.log("버튼 id 체크")
-            // console.log(this.checks);
+            let useTime = 0;
+            // 업무한 시간 카운트
+            let intervalIng = setInterval(() => {
+                let stateCheck = this.itemCheck.stateCheck
+
+                if(stateCheck==='after'){
+                    console.log(stateCheck)
+                    clearInterval(intervalIng)
+                    this.SET_CHECKS_TIMER({id:this.item.id, timer:this.useTimeText})
+                }
+
+                var hour = 0 
+                var min = 0
+                var sec = 0
+
+                useTime++
+                min = Math.floor(useTime/60);
+                hour = Math.floor(min/60);
+                sec = useTime%60;
+                min = min%60;
+
+                var th = hour;
+                var tm = min;
+                var ts = sec;
+                if(th<10) th = "0" + hour;
+                if(tm < 10) tm = "0" + min;
+                if(ts < 10) ts = "0" + sec;
+
+                if(th="00"){
+                    this.useTimeText = tm + ":" + ts;
+                } else {
+                    this.useTimeText = th + ":" + tm + ":" + ts;
+                }
+                // console.log(this.useTimeText);
+                this.SET_CHECKS_TIMER({id:this.item.id, timer:this.useTimeText})
+                console.log(this.itemCheck.useTime);
+
+
+            },1000)
+        },
+        workEnd() {
+            this.SET_CHECKS({id:this.item.id, check:"after"})
         }
     }
 }

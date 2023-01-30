@@ -5,7 +5,7 @@ const mutations = {
     SET_WORKS (state, works) {
         
         state.works = works
-        console.log(state.works)
+        // console.log(state.works)
         // for(let i=0; i<works.length; i++){
         //     state.works[i].stateCheck = "before"
         //     console.log(state.works[i])
@@ -17,22 +17,27 @@ const mutations = {
                 id: works[i].id,
                 stateCheck: "before",
                 // beforeTime: 0,
+                useTime: "",
             }
             state.checks.push(value)
         }
 
     },
     SET_CHECKS (state, {id, check}) {
-        // state.checks.id = id
-        // state.checks.check = check
         for(let i=0; i<state.works.length; i++){
-            // console.log(state.checks[i].id)
-            // console.log(id)
             if(state.checks[i].id === id) {
                 state.checks[i].stateCheck = check
-                // console.log(state.checks[i].stateCheck)
             }
         }
+    },
+    SET_CHECKS_TIMER (state, {id, timer}) {
+        for(let i=0; i<state.works.length; i++){
+            if(state.checks[i].id === id) {
+                state.checks[i].useTime = timer
+            }
+        }
+        console.log(state.checks)
+
     }
 }
 
