@@ -50,3 +50,18 @@ button {
 	border: 0px;
 	/* cursor: pointer; */
 }
+@media screen and (max-width:100rem) {
+	html{
+		font-size: 80%;
+	}
+}
+@media screen and (max-width:80rem) {
+	html{
+		font-size: 60%;
+	}
+}
+@media screen and (max-width:60rem) {
+	html{
+		font-size: 40%;
+	}
+}

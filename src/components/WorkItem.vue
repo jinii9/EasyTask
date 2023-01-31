@@ -16,6 +16,7 @@ img {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
 
+
     /*  */
     /* padding: 19.4rem 0 19.4rem 0; */
 
@@ -134,6 +135,16 @@ img {
     font-weight: 400;
     font-size: 1.4rem;
     line-height: 2.1rem;
+}
+@media screen and (max-width:1300px) {
+        /* html{
+            font-size: 50%;
+            width: 40%;
+            height: 40%;
+        } */
+        /* .title {
+            background-color: tan;
+        } */
 }
 </style>
 
