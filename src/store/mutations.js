@@ -5,12 +5,6 @@ const mutations = {
     SET_WORKS (state, works) {
         
         state.works = works
-        // console.log(state.works)
-        // for(let i=0; i<works.length; i++){
-        //     state.works[i].stateCheck = "before"
-        //     console.log(state.works[i])
-        // }
-        
         for(let i=0; i<works.length; i++){
 
             let value = {
@@ -36,7 +30,6 @@ const mutations = {
                 state.checks[i].useTime = timer
             }
         }
-        // console.log(state.checks)
 
     },
     SET_WORK_EDIT (state, work) {

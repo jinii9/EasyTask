@@ -10,7 +10,8 @@ const actions = {
         })
     },
     PUT_WORK (_, {id, name, description, startTime, endTime, requestedTime}) {
-        console.log("확인")
+        // console.log(`startTime확인:${startTime}`)
+        // console.log(`endTime확인:${endTime}`)
         return api.work.put(id, name, description, startTime, endTime, requestedTime)
     },
 }
